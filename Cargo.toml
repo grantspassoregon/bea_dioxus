@@ -1,0 +1,23 @@
+[package]
+name = "bea_dioxus"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+path = "src/lib.rs"
+
+[[bin]]
+path = "src/main.rs"
+name = "bea_dioxus"
+
+[dependencies]
+dioxus = "0.4.0"
+dioxus-desktop = "0.4.0"
+dioxus-router = "0.4.1"
+dioxus-web = "0.4.0"
+dotenv = "0.15.0"
+itertools = "0.12.0"
+spreadsheet = { path = "../spreadsheet" }
+thiserror = "1.0.50"
+tracing = "0.1.40"
+tracing-subscriber = "0.3.18"

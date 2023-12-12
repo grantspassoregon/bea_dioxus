@@ -1,0 +1,69 @@
+# project tasks
+
+[tasks.tailwinds]
+workspace = false
+script_runner = "@shell"
+script = '''
+npx tailwindcss -i ./input.css -o ./public/tailwind.css --watch
+'''
+
+[tasks.front-serve]
+workspace = false
+install_crate = "dioxus-cli"
+command = "dioxus"
+args = ["serve"]
+
+[tasks.front-build]
+workspace = false
+script_runner = "@shell"
+script = '''
+# shuttle issue with static files
+# location is different depending on the environment
+rm -rf api/shuttle/static static
+mkdir api/shuttle/static
+mkdir static
+cd front
+dioxus build --release
+# local development 
+cp -r dist/* ../api/shuttle/static
+# production
+cp -r dist/* ../static
+'''
+
+[tasks.front]
+workspace = false
+run_task = { name = ["format", "front-build", "front-serve"]}
+
+[tasks.back]
+workspace = false
+run_task = { name = ["format", "front-build", "api-run"]}
+
+# local db
+[tasks.db-start]
+workspace = false
+script_runner = "@shell"
+script = '''
+docker run -d --name bea -p 5432:5432 -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres -e POSTGRES_DB=bea postgres
+'''
+
+[tasks.db-stop]
+workspace = false
+script_runner = "@shell"
+script = '''
+docker stop bea
+docker rm bea
+'''
+
+# general tasks
+[tasks.clippy]
+workspace = false
+install_crate = "cargo-clippy"
+command = "cargo"
+args = ["clippy"]
+
+[tasks.format]
+clear = true
+workspace = false
+install_crate = "rustfmt"
+command = "cargo"
+args = ["fmt", "--all"] #, "--", "--check"]
